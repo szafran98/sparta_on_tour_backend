@@ -5,8 +5,8 @@ from .models import Event, Participant
 class EventSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Event
-        fields = ['id', 'title', 'description', 'normalized_event_date',
-                  'normalized_join_date', 'image_link']
+        fields = ['id', 'title', 'description', 'date',
+                  'can_be_joined_to', 'image_link']
 
 
 class ParticipantSerializer(serializers.HyperlinkedModelSerializer):
