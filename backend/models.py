@@ -29,5 +29,5 @@ class Participant(models.Model):
     join_date = models.DateTimeField(auto_now_add=True)
     is_confirmed = models.BooleanField(default=False)
     joined_event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE)
 
