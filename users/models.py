@@ -14,3 +14,9 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return "{}".format(self.email)
+
+    @staticmethod
+    def check_pesel_duplicates(pesel):
+        accounts = CustomUser.objects.filter(pesel=pesel)
+        if accounts.count() != 0:
+            return True

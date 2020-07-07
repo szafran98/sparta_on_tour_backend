@@ -20,6 +20,9 @@ class UserSerializer(serializers.ModelSerializer):
         password2 = validated_data.pop('password2')
         if password != password2:
             raise serializers.ValidationError({'password': 'Passwords not match'})
+        if CustomUser.check_pesel_duplicates(validated_data['pesel']):
+            print('elo')
+            raise serializers.ValidationError({'pesel': 'User with this pesel already registered'})
         user = CustomUser(**validated_data)
         user.set_password(password)
         user.save()

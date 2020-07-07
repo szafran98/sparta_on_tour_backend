@@ -23,9 +23,6 @@ class Event(models.Model):
 
 class Participant(models.Model):
 
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    pesel = models.IntegerField(validators=[MaxValueValidator(99999999999)])
     join_date = models.DateTimeField(auto_now_add=True)
     is_confirmed = models.BooleanField(default=False)
     joined_event = models.ForeignKey(Event, on_delete=models.CASCADE)
