@@ -27,4 +27,3 @@ class CustomAuthToken(ObtainAuthToken):
             })
         except Exception:
             raise AuthenticationFailed()
-            #return Response(data=None, status=status.HTTP_401_UNAUTHORIZED)
