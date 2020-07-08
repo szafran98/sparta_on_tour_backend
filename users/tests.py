@@ -18,15 +18,21 @@ class RegistrationTestCase(APITestCase):
 class LoginTestCase(APITestCase):
 
     def setUp(self):
-        self.user = get_user_model().objects.create_user(username='testuser', password='testpass')
-        self.token = Token.objects.create(user=self.user)
+        self.user = get_user_model().objects.create_user(
+            email='testmail@test.pl',
+            first_name='testname1',
+            last_name='testname2',
+            pesel=123,
+            password='testpass'
+        )
 
     def test_user_login(self):
-        data = {"username": "testuser", "password": "testpass"}
+        data = {"username": "testmail@test.pl", "password": "testpass"}
         response = self.client.post('/auth/', data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['token'], Token.objects.get(user=self.user).key)
 
     def test_user_login_no_user(self):
-        data = {"username": "baduser", "password": "badpass"}
+        data = {"username": "badmail@test.pl", "password": "badpass"}
         response = self.client.post('/auth/', data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
