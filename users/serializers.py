@@ -10,21 +10,24 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ('first_name', 'last_name', 'pesel', 'email', 'password', 'password2')
-        extra_kwargs = {'password': {
-            'write_only': True
-        }}
+        fields = ['first_name', 'last_name', 'pesel', 'email', 'password', 'password2']
+
+        extra_kwargs = {
+            'password': {
+                'write_only': True
+            },
+            'password2': {
+                'write_only': True
+            }
+        }
 
     def create(self, validated_data):
+        email = validated_data.pop('email')
         password = validated_data.pop('password')
         password2 = validated_data.pop('password2')
         if password != password2:
             raise serializers.ValidationError({'password': 'Passwords not match'})
-        if CustomUser.check_pesel_duplicates(validated_data['pesel']):
-            print('elo')
+        if CustomUser.check_pesel_duplicates(validated_data.get('pesel')):
             raise serializers.ValidationError({'pesel': 'User with this pesel already registered'})
-        user = CustomUser(**validated_data)
-        user.set_password(password)
-        user.save()
-        Token.objects.create(user=user)
+        user = CustomUser.objects.create_user(email, password, **validated_data)
         return user

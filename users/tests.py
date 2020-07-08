@@ -9,10 +9,10 @@ class RegistrationTestCase(APITestCase):
     def test_registration(self):
         data = {"email": "test@localhost.com", "first_name": "testname",
                 'last_name': 'testlastname', 'pesel': 123,
-                "password": "testpass", "password1": "testpass"}
+                "password": "testpass", "password2": "testpass"}
         response = self.client.post("/api/users/", data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(get_user_model().objects.get(username='testcase').username, 'testcase')
+        self.assertEqual(get_user_model().objects.first().first_name, 'testname')
 
 
 class LoginTestCase(APITestCase):
