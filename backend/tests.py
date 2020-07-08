@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.views import get_user_model
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
@@ -6,37 +6,10 @@ from .models import Event, Participant
 import datetime
 
 
-class RegistrationTestCase(APITestCase):
-
-    def test_registration(self):
-        data = {"email": "test@localhost.com", "username": "testuser",
-                "password": "testpass", "password1": "testpass"}
-        response = self.client.post("/api/users/", data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(User.objects.get(username='testcase').username, 'testcase')
-
-
-class LoginTestCase(APITestCase):
-
-    def setUp(self):
-        self.user = User.objects.create_user(username='testuser', password='testpass')
-        self.token = Token.objects.create(user=self.user)
-
-    def test_user_login(self):
-        data = {"username": "testuser", "password": "testpass"}
-        response = self.client.post('/auth/', data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_user_login_no_user(self):
-        data = {"username": "baduser", "password": "badpass"}
-        response = self.client.post('/auth/', data)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-
 class EventViewSetTestCase(APITestCase):
 
     def setUp(self) -> None:
-        self.user = User.objects.create_user(username='testadmin', password='adminpass', is_staff=True)
+        self.user = get_user_model().objects.create(email='testadmin', password='adminpass', is_staff=True)
         self.token = Token.objects.create(user=self.user)
         self.user_authentication()
 
@@ -107,7 +80,7 @@ class EventViewSetTestCase(APITestCase):
 class ParticipantViewSetTestCase(APITestCase):
 
     def setUp(self) -> None:
-        self.user = User.objects.create_user(username='testuser', password='testuser')
+        self.user = get_user_model().objects.create_user(username='testuser', password='testuser')
         self.token = Token.objects.create(user=self.user)
 
     def test_get_events_joined_by_user(self):
